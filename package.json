@@ -1,0 +1,32 @@
+{
+  "name": "react-native-pager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:babel": "babel index.tsx --out-dir lib/ --extensions '.ts','.tsx'",
+    "build:types": "tsc --project tsconfig.lib.json",
+    "build": "npm run clean; npm run build:babel; npm run build:types",
+    "clean": "rm -rf lib",
+    "prepublish": "npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "react-native": "0.61.5",
+    "react": "^16.12.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.1.5",
+    "@babel/core": "7.1.6",
+    "@babel/preset-typescript": "^7.1.0",
+    "prettier": "^1.19.1",
+    "react": "^16.12.0",
+    "react-native": "^0.61.5",
+    "typescript": "^3.7.5",
+    "@types/react": "^16.9.19",
+    "@types/react-native": "^0.61.10"
+
+  }
+}
