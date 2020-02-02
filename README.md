@@ -79,7 +79,7 @@ import { Pager } from 'react-native-pager';
  />
  ```
 
-###render a specific item at startup
+### Render a specific item at mount
 
  ```typescript jsx
  import { Image } from 'react-native';
