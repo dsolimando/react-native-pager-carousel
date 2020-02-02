@@ -5,7 +5,7 @@ A native based Pager/Carousel. It uses FlatList on iOS and ViewPagerAndroid on A
 # Installation
 
 ```bash
-# npm install react-native-pger
+# npm install react-native-pager
 ```
 
 # Usage
