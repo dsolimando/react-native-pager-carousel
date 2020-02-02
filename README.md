@@ -1,18 +1,18 @@
-# react-native-pager
+# react-native-pager-carousel
 
 A native based Pager/Carousel. It uses FlatList on iOS and ViewPagerAndroid on Android to assure 60 FPS performance.
 
 # Installation
 
 ```bash
-# npm install react-native-pager
+# npm install react-native-pager-carousel
 ```
 
 # Usage
 
 ````typescript jsx
 import { Image } from 'react-native';
-import { Pager } from 'react-native-pager';
+import { Pager } from 'react-native-pager-carousel';
 
 //...
 
@@ -35,7 +35,7 @@ import { Pager } from 'react-native-pager';
 
  ```typescript jsx
  import { Image } from 'react-native';
- import { Pager } from 'react-native-pager';
+ import { Pager } from 'react-native-pager-carousel';
  
  //...
  
@@ -59,7 +59,7 @@ import { Pager } from 'react-native-pager';
 
  ```typescript jsx
  import { Image } from 'react-native';
- import { Pager } from 'react-native-pager';
+ import { Pager } from 'react-native-pager-carousel';
  
  //...
  
@@ -83,7 +83,7 @@ import { Pager } from 'react-native-pager';
 
  ```typescript jsx
  import { Image } from 'react-native';
- import { Pager } from 'react-native-pager';
+ import { Pager } from 'react-native-pager-carousel';
  
  //...
  

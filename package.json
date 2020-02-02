@@ -1,5 +1,5 @@
 {
-  "name": "react-native-pager",
+  "name": "react-native-pager-carousel",
   "version": "0.0.1",
   "description": "A performant Pager/Carousel for react-native",
   "main": "index.js",
