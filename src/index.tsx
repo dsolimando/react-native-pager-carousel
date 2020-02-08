@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import {
   Dimensions,
   FlatList,
@@ -7,10 +7,9 @@ import {
   Platform,
   StyleSheet,
   View,
-  ViewabilityConfig,
-  ViewPagerAndroid,
-  ViewPagerAndroidOnPageScrollEventData
+  ViewabilityConfig
 } from "react-native";
+import ViewPager from "@react-native-community/viewpager";
 
 export interface IScrollEvent {
   offset: number;
@@ -32,13 +31,12 @@ export interface IProps {
   viewabilityConfig?: ViewabilityConfig;
   animated?: boolean;
   timeBetweenScroll?: number;
+  containerStyle?: any;
 }
 
-const width = Dimensions.get("window").width;
-
 export class Pager extends Component<IProps> {
-  scrollView: { current: null | FlatList };
-  viewPager: { current: null | ViewPagerAndroid };
+  scrollView: { current: null | FlatList<any> };
+  viewPager: { current: null | ViewPager };
 
   initialItemToRenderIndex: number;
 
@@ -54,14 +52,15 @@ export class Pager extends Component<IProps> {
 
   onViewableItemsChanged: any;
   viewabilityConfig: any;
+  width: number;
 
   constructor(props: IProps) {
     super(props);
     this.scrollView = React.createRef();
     this.viewPager = React.createRef();
     this.initialItemToRenderIndex = Math.min(
-      this.props.initialItemToRenderIndex || 0,
-      this.props.data.length - 1
+        this.props.initialItemToRenderIndex || 0,
+        this.props.data.length - 1
     );
     this.lastContentOffsetX = this.indexToOffset(this.initialItemToRenderIndex);
     this.lastIndex = this.lastIndexWhenIdle = this.initialItemToRenderIndex;
@@ -69,6 +68,9 @@ export class Pager extends Component<IProps> {
     this.viewabilityConfig = props.viewabilityConfig;
     this.maxIndex = this.props.data.length - 1;
     this.scrollDirection = "leftToRight";
+    this.width =
+        (this.props.containerStyle && this.props.containerStyle.width) ||
+        Dimensions.get("window").width;
   }
 
   _automaticScrolling = (): number => {
@@ -126,12 +128,12 @@ export class Pager extends Component<IProps> {
 
   offsetToIndex = (offset: number): number => {
     const { marginHorizontal = 0 } = this.props;
-    return (offset + marginHorizontal) / (width - marginHorizontal * 2);
+    return (offset + marginHorizontal) / (this.width - marginHorizontal * 2);
   };
 
   indexToOffset = (index: number): number => {
     const { marginHorizontal = 0 } = this.props;
-    return -marginHorizontal + index * (width - marginHorizontal * 2);
+    return -marginHorizontal + index * (this.width - marginHorizontal * 2);
   };
 
   _onMomentumScrollEnd = (event: any) => {
@@ -145,7 +147,7 @@ export class Pager extends Component<IProps> {
   _onFlatListScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (this.props.onScroll) {
       const deltaX =
-        event.nativeEvent.contentOffset.x - this.lastContentOffsetX;
+          event.nativeEvent.contentOffset.x - this.lastContentOffsetX;
       this.props.onScroll({
         index: this.lastIndex,
         offset: deltaX / this._itemWidth()
@@ -157,47 +159,47 @@ export class Pager extends Component<IProps> {
     const { marginHorizontal = 0 } = this.props;
 
     return (
-      <FlatList
-        ref={this.scrollView}
-        data={this.props.data}
-        horizontal={true}
-        decelerationRate={0}
-        snapToInterval={width - 2 * marginHorizontal}
-        snapToAlignment={"center"}
-        showsHorizontalScrollIndicator={false}
-        onMomentumScrollEnd={this._onMomentumScrollEnd}
-        contentInset={{
-          bottom: 0,
-          left: this.props.marginHorizontal,
-          right: this.props.marginHorizontal,
-          top: 0
-        }}
-        renderItem={this.renderIosItem}
-        onViewableItemsChanged={this.onViewableItemsChanged}
-        viewabilityConfig={this.viewabilityConfig}
-        onScroll={this._onFlatListScroll}
-      />
+        <FlatList
+            ref={this.scrollView}
+            data={this.props.data}
+            horizontal={true}
+            decelerationRate={0}
+            snapToInterval={this.width - 2 * marginHorizontal}
+            snapToAlignment={"center"}
+            showsHorizontalScrollIndicator={false}
+            onMomentumScrollEnd={this._onMomentumScrollEnd}
+            contentInset={{
+              bottom: 0,
+              left: this.props.marginHorizontal,
+              right: this.props.marginHorizontal,
+              top: 0
+            }}
+            renderItem={this.renderIosItem}
+            onViewableItemsChanged={this.onViewableItemsChanged}
+            viewabilityConfig={this.viewabilityConfig}
+            onScroll={this._onFlatListScroll}
+        />
     );
   };
 
   renderIosItem = ({ index }: { index: number }) => {
     const { distanceBetweenItems = 0 } = this.props;
     return (
-      <View
-        key={index}
-        style={{
-          marginHorizontal: distanceBetweenItems / 2,
-          width: this._itemWidth()
-        }}
-      >
-        {this.props.renderItem(this.props.data[index], index)}
-      </View>
+        <View
+            key={index}
+            style={{
+              marginHorizontal: distanceBetweenItems / 2,
+              width: this._itemWidth()
+            }}
+        >
+          {this.props.renderItem(this.props.data[index], index)}
+        </View>
     );
   };
 
   _itemWidth = () => {
     const { marginHorizontal = 0, distanceBetweenItems = 0 } = this.props;
-    return width - (2 * marginHorizontal + distanceBetweenItems);
+    return this.width - (2 * marginHorizontal + distanceBetweenItems);
   };
 
   _onPageSelected = (event: any) => {
@@ -207,12 +209,10 @@ export class Pager extends Component<IProps> {
     }
   };
 
-  _onPageScroll = (
-    event: NativeSyntheticEvent<ViewPagerAndroidOnPageScrollEventData>
-  ) => {
+  _onPageScroll = (event: NativeSyntheticEvent<any>) => {
     if (this.props.onScroll) {
       const dragRight =
-        this.lastIndexWhenIdle - 1 === event.nativeEvent.position;
+          this.lastIndexWhenIdle - 1 === event.nativeEvent.position;
       // Last event emitted is falsy`
       if (event.nativeEvent.position === this.lastIndexWhenIdle + 1) {
         return;
@@ -220,8 +220,8 @@ export class Pager extends Component<IProps> {
       this.props.onScroll({
         index: this.lastIndexWhenIdle,
         offset: dragRight
-          ? -(1 - Math.max(0, event.nativeEvent.offset))
-          : event.nativeEvent.offset
+            ? -(1 - Math.max(0, event.nativeEvent.offset))
+            : event.nativeEvent.offset
       });
     }
   };
@@ -237,42 +237,47 @@ export class Pager extends Component<IProps> {
     const { data, marginHorizontal = 0, distanceBetweenItems = 0 } = this.props;
 
     const pageMargin = -(marginHorizontal * 2 - distanceBetweenItems);
-
     return (
-      <ViewPagerAndroid
-        ref={this.viewPager}
-        pageMargin={pageMargin}
-        style={styles.viewPager}
-        initialPage={this.initialItemToRenderIndex}
-        onPageSelected={this._onPageSelected}
-        onPageScroll={this._onPageScroll}
-        onPageScrollStateChanged={this._onPageScrollStateChanged}
-      >
-        {data.map((propsData, index) =>
-          this.renderAndroidItem(propsData, index)
-        )}
-      </ViewPagerAndroid>
+        <ViewPager
+            ref={this.viewPager}
+            pageMargin={pageMargin}
+            style={styles.viewPager}
+            initialPage={this.initialItemToRenderIndex}
+            onPageSelected={this._onPageSelected}
+            onPageScroll={this._onPageScroll}
+            onPageScrollStateChanged={this._onPageScrollStateChanged}
+        >
+          {data.map((propsData, index) =>
+              this.renderAndroidItem(propsData, index)
+          )}
+        </ViewPager>
     );
   };
 
   renderAndroidItem = (data: any, index: number) => (
-    <View key={index} style={styles.outer}>
-      <View
-        style={[
-          styles.item,
-          { paddingHorizontal: this.props.marginHorizontal }
-        ]}
-      >
-        {this.props.renderItem(data, index)}
+      <View key={index} style={styles.outer}>
+        <View
+            style={[
+              styles.item,
+              { paddingHorizontal: this.props.marginHorizontal }
+            ]}
+        >
+          {this.props.renderItem(data, index)}
+        </View>
       </View>
-    </View>
   );
 
-  render = (): React.ReactNode =>
-    Platform.OS === "ios" ? this.renderIos() : this.renderAndroid();
+  render = (): React.ReactNode => (
+      <View style={[styles.container, this.props.containerStyle]}>
+        {Platform.OS === "ios" ? this.renderIos() : this.renderAndroid()}
+      </View>
+  );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    width: Dimensions.get("window").width
+  },
   item: {
     flex: 1
   },

@@ -1,8 +1,9 @@
 {
   "name": "react-native-pager-carousel",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A performant Pager/Carousel for react-native",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build:babel": "babel src/index.tsx --out-dir lib/ --extensions '.ts','.tsx'",
     "build:types": "tsc --project tsconfig.lib.json",
@@ -10,7 +11,14 @@
     "clean": "rm -rf lib",
     "prepublish": "npm run build"
   },
-  "keywords": ["react-native","carousel","pager"],
+  "dependencies": {
+    "@react-native-community/viewpager": "^2.0.2"
+  },
+  "keywords": [
+    "react-native",
+    "carousel",
+    "pager"
+  ],
   "author": "Damien Solimando",
   "license": "",
   "peerDependencies": {
